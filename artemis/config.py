@@ -1,8 +1,9 @@
 import os
-from typing import Annotated, Any, List, Optional, get_type_hints
-import yaml  
 from pathlib import Path
+from typing import Annotated, Any, List, Optional, cast, get_type_hints
+
 import decouple
+import yaml
 
 from artemis.modules.runtime_configuration.nuclei_configuration import (
     SeverityThreshold as NucleiSeverityThreshold,
@@ -10,26 +11,40 @@ from artemis.modules.runtime_configuration.nuclei_configuration import (
 
 DEFAULTS = {}
 
-def load_yaml_config():  
-    """Load configuration from YAML file."""  
-    yaml_path = Path(__file__).parent / "config.yaml" 
-    if yaml_path.exists():  
-        with open(yaml_path) as f:  
-            return yaml.safe_load(f)  
-    return {}  
-  
+
+def load_yaml_config() -> dict[Any, Any]:
+    """Load configuration from YAML file."""
+    yaml_path = Path(__file__).parent / "config.yaml"
+    try:
+        if not yaml_path.exists():
+            return {}
+        with open(yaml_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+            return cast(dict[Any, Any], data) if data is not None else {}
+    except (FileNotFoundError, PermissionError, OSError) as e:
+        print(f"Error reading config file {yaml_path}: {e}")
+        return {}
+    except yaml.YAMLError as e:
+        print(f"Invalid YAML in {yaml_path}: {e}")
+        return {}
+    except Exception as e:
+        print(f"Unexpected error loading config {yaml_path}: {e}")
+        return {}
+
+
 YAML_CONFIG = load_yaml_config()
 
-def get_config(name: str, **kwargs) -> Any:  # type: ignore
-    if name in YAML_CONFIG:  
-        yaml_value = YAML_CONFIG[name]  
 
-        if name == "PLACEHOLDER_PAGE_CONTENT_FILENAME" and yaml_value:  
-            if not os.path.isabs(yaml_value):  
-                return os.path.join(os.path.dirname(__file__), yaml_value) 
-        if yaml_value == "":  
-            return ""  
-            
+def get_config(name: str, **kwargs) -> Any:  # type: ignore
+    if name in YAML_CONFIG:
+        yaml_value = YAML_CONFIG[name]
+
+        if name == "PLACEHOLDER_PAGE_CONTENT_FILENAME" and yaml_value:
+            if not os.path.isabs(yaml_value):
+                return os.path.join(os.path.dirname(__file__), yaml_value)
+        if yaml_value == "":
+            return ""
+
         return yaml_value
 
     if "default" in kwargs:
