@@ -18,6 +18,15 @@ if ! exists custom.yaml; then
 # This file contains configuration overrides
 # Values here take priority over .env file and defaults
 
+<<<<<<< HEAD
+=======
+if ! exists custom.yaml; then
+    cat > custom.yaml << 'EOF'
+# Artemis YAML Configuration
+# This file contains configuration overrides
+# Values here take priority over .env file and defaults
+
+>>>>>>> bf6857e (feat: handle exceptions in config.py(#433))
 # Essential settings
 POSTGRES_CONN_STR: "postgresql://postgres:postgres@postgres/artemis"
 CUSTOM_USER_AGENT: "Artemis Scanner - contact@example.com"
