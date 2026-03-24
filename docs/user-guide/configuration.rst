@@ -3,6 +3,48 @@ Configuration options
 
 Artemis can be configured by setting the following variables in the ``.env`` file (in the form of ``VARIABLE_NAME=VARIABLE_VALUE``
 directives, e.g. ``SCANNING_PACKETS_PER_SECOND=5``):
+YAML Configuration
+------------------
+
+Artemis supports configuration via YAML file for easier management of complex settings like template lists. Create a file at ``config.yaml`` to override default settings.
+
+**Benefits of YAML Configuration**
+
+- **Cleaner syntax**: No more escaping commas in long lists
+- **Comments**: Add explanations directly in configuration
+- **Structure**: Group related settings visually
+- **Validation**: YAML parsers catch syntax errors
+
+**Example YAML Configuration**
+
+.. code-block:: yaml
+
+    # Database connections
+    POSTGRES_CONN_STR: "postgresql://postgres:postgres@postgres/artemis"
+    REDIS_CONN_STR: "redis://redis:6379/1"
+
+    # Rate limiting and identification
+    LOCK_SCANNED_TARGETS: true
+    REQUESTS_PER_SECOND: 1
+    CUSTOM_USER_AGENT: "Artemis Scanner - contact@example.com"
+
+    # Complex list examples (benefit of YAML)
+    NUCLEI_TEMPLATES_TO_SKIP:
+      - "http/exposures/configs/exposed-svn.yaml"
+      - "http/exposures/configs/git-config.yaml"
+      - "custom/template.yaml"
+
+    MODULES_DISABLED_BY_DEFAULT:
+      - "admin_panel_login_bruter"
+      - "api_scanner"
+
+**Migration from .env**
+
+You can gradually migrate settings from ``.env`` to YAML. Settings not in YAML will continue to use environment variables.
+
+.. note::
+   The YAML file only needs to contain settings you want to override. Everything else falls back to defaults or environment variables.
+
 
 .. include:: config-docs.inc
 

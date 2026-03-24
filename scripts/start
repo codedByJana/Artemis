@@ -12,7 +12,6 @@ if ! exists .env; then
 else
     ENV_MESSAGE=""
 fi
-
 if ! exists custom.yaml; then
     cat > custom.yaml << 'EOF'
 # Artemis YAML Configuration
@@ -85,7 +84,7 @@ if [ $? -eq 0 ]; then
     fi
 fi
 
-echo -e $ENV_MESSAGE$YAML_MESSAGE
+echo -e $ENV_MESSAGE
 
 (
     source .env

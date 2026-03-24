@@ -89,6 +89,7 @@ services:
       - data-web:/data
       - ./output/autoreporter/:/opt/output/autoreporter
       - ${DOCKER_COMPOSE_ADDITIONAL_SHARED_DIRECTORY:-./shared}:/shared/
+      - ./config:/opt/artemis/config
 
   karton-api_scanner:
     <<: [*logging, *artemis-build-or-image]
